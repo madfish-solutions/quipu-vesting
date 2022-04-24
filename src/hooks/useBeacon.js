@@ -1,8 +1,22 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import constate from "constate";
 
 import { BeaconWallet } from "@taquito/beacon-wallet";
 import { TezosToolkit } from "@taquito/taquito";
+
+// TESTNET
+// const contractAddress = "KT1QwVmmYNp3Ke2JkNr2eaAdYyAJFusbi7yH";
+
+// const DEFAULT_NETWORK = {
+//   id: "ithacanet",
+//   nextNetworkIndex: 1,
+//   name: "Ithacanet",
+//   type: "testnet",
+//   rpcBaseURL: "https://ithacanet.smartpy.io",
+// };
+
+// MAINNET
+const contractAddress = "KT1N5HyBD5HZ7NZwmDar1LmBN7WkHbdr6zb9";
 
 const DEFAULT_NETWORK = {
   id: "mainnet",
@@ -43,6 +57,8 @@ Tezos.setSignerProvider(new LambdaViewSigner());
 
 export const [UseBeaconProvider, useBeacon] = constate(() => {
   const [pkh, setUserPkh] = useState();
+  const [contract, setContract] = useState(null);
+  const [storage, setStorage] = useState(null);
 
   const connect = useCallback(async () => {
     await wallet.disconnect();
@@ -66,6 +82,20 @@ export const [UseBeaconProvider, useBeacon] = constate(() => {
     setUserPkh(undefined);
   }, []);
 
+  const loadContract = useCallback(async () => {
+    const contract = await Tezos.contract.at(contractAddress);
+    // console.log(contract);
+    setContract(contract);
+    const storage = await contract.storage();
+    setStorage(storage);
+    // console.log(storage);
+    // const admin = storage.admin;
+  }, []);
+
+  useEffect(() => {
+    loadContract();
+  }, [loadContract]);
+
   return {
     connect,
     disconnect,
@@ -73,6 +103,8 @@ export const [UseBeaconProvider, useBeacon] = constate(() => {
     Tezos,
     wallet,
     pkh,
+    contract,
+    storage,
   };
 });
 

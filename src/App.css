@@ -83,3 +83,17 @@ textarea {
   font-size: 0.75rem;
   margin-top: 12px;
 }
+
+.fill-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.fill-form div {
+  margin-bottom: 12px;
+  max-width: 400px;
+}
+
+.fill-form label {
+  margin-right: 12px;
+}
