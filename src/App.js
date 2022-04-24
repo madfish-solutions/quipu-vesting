@@ -1,23 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div className="header-tabs">
+          <div className="tab">Distribute</div>
+          <div className="tab active-tab">Explore</div>
+        </div>
+        <div className="header-buttons">
+          <div className="button outline">Connect</div>
+          <div className="button filled">Disconnect</div>
+        </div>
       </header>
+      <main>
+        <section>
+          <div className="search-bar"></div>
+          <table>
+            <thead>
+              <tr>
+                <th>Full Reward</th>
+                <th>Claimed</th>
+                <th>Pending</th>
+                <th>Ends in</th>
+                <th>{/* action button */}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1000 QUIPU</td>
+                <td>1000 QUIPU</td>
+                <td>1000 QUIPU</td>
+                <td>25 nov 2013</td>
+                <td>
+                  <div className="button filled">Claim</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
     </div>
   );
 }
