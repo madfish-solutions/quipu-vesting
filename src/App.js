@@ -1,16 +1,53 @@
+import { useState } from "react";
+import "./material-button.css";
+import "./material-tabs.css";
 import "./App.css";
+import { Button } from "./Button";
+import { Tabs } from "./Tabs";
+import { Tab } from "./Tab";
+
+const mockAddress = "tz12345678987123123126t5r4e321";
+
+const TABS = ["Distribute", "Explore"];
 
 function App() {
+  const [connected, setConnected] = useState(null);
+  const [currentTab, setCurrentTab] = useState(0);
+
+  const handleConnect = () => {
+    setConnected(mockAddress);
+  };
+
+  const handleDisconnect = () => {
+    setConnected(null);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <div className="header-tabs">
-          <div className="tab">Distribute</div>
-          <div className="tab active-tab">Explore</div>
-        </div>
+        <Tabs>
+          {TABS.map((tab, index) => (
+            <Tab
+              onClick={() => setCurrentTab(index)}
+              selected={currentTab === index}
+              key={index}
+            >
+              {tab}
+            </Tab>
+          ))}
+        </Tabs>
         <div className="header-buttons">
-          <div className="button outline">Connect</div>
-          <div className="button filled">Disconnect</div>
+          {!connected && <Button onClick={handleConnect}>Connect</Button>}
+          {connected && typeof connected === "string" && (
+            <Button variant={"outlined"} onClick={handleConnect}>
+              {connected.slice(0, 6)}...${connected.slice(-3)}
+            </Button>
+          )}
+          {connected && (
+            <Button onClick={handleDisconnect} variant="filled">
+              Disconnect
+            </Button>
+          )}
         </div>
       </header>
       <main>
