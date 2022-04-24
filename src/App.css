@@ -59,13 +59,41 @@ main section table th {
 }
 
 textarea {
+  width: calc(100% - 32px);
+  max-width: calc(100% - 32px);
+
+  padding: 16px;
   outline: none;
   border: none;
+  background-color: transparent;
+  font-size: 0.85rem;
+}
+
+.textarea {
   background-color: rgb(var(--pure-material-gray-rgb, 238, 238, 238));
   border-radius: 8px;
-  font-size: 0.85rem;
 }
 
 .distribute-button {
   margin-top: 24px;
+}
+
+.textarea-error {
+  color: red;
+  font-size: 0.75rem;
+  margin-top: 12px;
+}
+
+.fill-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.fill-form div {
+  margin-bottom: 12px;
+  max-width: 400px;
+}
+
+.fill-form label {
+  margin-right: 12px;
 }
