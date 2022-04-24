@@ -22,8 +22,8 @@ export const Explore = () => {
       arr.push(vesting);
     }
     if (pkh) {
-      arr = arr.filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
-      // arr = arr.filter((x) => x.receiver === pkh || x.admin === pkh);
+      // arr = arr.filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
+      arr = arr.filter((x) => x.receiver === pkh || x.admin === pkh);
     }
     console.log(arr);
     setRewards(arr);
