@@ -1,16 +1,15 @@
 {
   "files": {
-    "main.css": "/madfish-vesting/static/css/main.073c9b0a.css",
-    "main.js": "/madfish-vesting/static/js/main.56fac65d.js",
+    "main.css": "/madfish-vesting/static/css/main.f4ee4e7e.css",
+    "main.js": "/madfish-vesting/static/js/main.74315e7a.js",
     "static/js/787.36d3b00d.chunk.js": "/madfish-vesting/static/js/787.36d3b00d.chunk.js",
-    "static/media/logo.svg": "/madfish-vesting/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/madfish-vesting/index.html",
-    "main.073c9b0a.css.map": "/madfish-vesting/static/css/main.073c9b0a.css.map",
-    "main.56fac65d.js.map": "/madfish-vesting/static/js/main.56fac65d.js.map",
+    "main.f4ee4e7e.css.map": "/madfish-vesting/static/css/main.f4ee4e7e.css.map",
+    "main.74315e7a.js.map": "/madfish-vesting/static/js/main.74315e7a.js.map",
     "787.36d3b00d.chunk.js.map": "/madfish-vesting/static/js/787.36d3b00d.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.073c9b0a.css",
-    "static/js/main.56fac65d.js"
+    "static/css/main.f4ee4e7e.css",
+    "static/js/main.74315e7a.js"
   ]
 }
