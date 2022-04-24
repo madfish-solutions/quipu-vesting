@@ -32,7 +32,7 @@ main section {
   margin: 40px 0px;
   max-width: 1024px;
   border-radius: 8px;
-  box-shadow: 0 14px 48px rgba(0,0,0,0.15), 0 10px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 14px 48px rgba(0, 0, 0, 0.15), 0 10px 16px rgba(0, 0, 0, 0.12);
 }
 
 main section table {
@@ -40,7 +40,14 @@ main section table {
   width: 100%;
 }
 
-main section table td, main section table th {
+.section-content {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+main section table td,
+main section table th {
   text-align: left;
 }
 
@@ -49,4 +56,16 @@ main section table td, main section table th {
   background-color: rgb(var(--pure-material-onprimary-rgb, 255, 255, 255));
   /* border: 2px solid rgb(var(--pure-material-primary-rgb, 33, 150, 243)); */
   border-radius: 8px;
+}
+
+textarea {
+  outline: none;
+  border: none;
+  background-color: rgb(var(--pure-material-gray-rgb, 238, 238, 238));
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.distribute-button {
+  margin-top: 24px;
 }

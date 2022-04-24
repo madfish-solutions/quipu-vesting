@@ -2,13 +2,18 @@ import { useState } from "react";
 import "./material-button.css";
 import "./material-tabs.css";
 import "./App.css";
-import { Button } from "./Button";
-import { Tabs } from "./Tabs";
-import { Tab } from "./Tab";
+import { Button } from "./components/Button";
+import { Tabs } from "./components/Tabs";
+import { Tab } from "./components/Tab";
+import { Distribute } from "./components/Distribute";
+import { Explore } from "./components/Explore";
 
 const mockAddress = "tz12345678987123123126t5r4e321";
 
-const TABS = ["Distribute", "Explore"];
+const TABS = [
+  { label: "Distribute", component: Distribute },
+  { label: "Explore", component: Explore },
+];
 
 function App() {
   const [connected, setConnected] = useState(null);
@@ -22,6 +27,8 @@ function App() {
     setConnected(null);
   };
 
+  const SelectedTab = TABS[currentTab].component;
+
   return (
     <div className="App">
       <header className="App-header">
@@ -32,7 +39,7 @@ function App() {
               selected={currentTab === index}
               key={index}
             >
-              {tab}
+              {tab.label}
             </Tab>
           ))}
         </Tabs>
@@ -51,31 +58,7 @@ function App() {
         </div>
       </header>
       <main>
-        <section>
-          <div className="search-bar"></div>
-          <table>
-            <thead>
-              <tr>
-                <th>Full Reward</th>
-                <th>Claimed</th>
-                <th>Pending</th>
-                <th>Ends in</th>
-                <th>{/* action button */}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1000 QUIPU</td>
-                <td>1000 QUIPU</td>
-                <td>1000 QUIPU</td>
-                <td>25 nov 2013</td>
-                <td>
-                  <div className="button filled">Claim</div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
+        <SelectedTab />
       </main>
     </div>
   );
