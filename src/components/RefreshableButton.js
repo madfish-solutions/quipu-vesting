@@ -19,6 +19,7 @@ export const RefreshableButton = ({ callback }) => {
     return () => {
       clearInterval(interval);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [block]);
 
   const handleRefresh = () => {
