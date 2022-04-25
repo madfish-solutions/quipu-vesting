@@ -3,9 +3,10 @@ import useBeacon from "../hooks/useBeacon";
 import BigNumber from "bignumber.js";
 import { getTokensMetadata } from "../utils/tokenMetadata.api";
 import { Button } from "./Button";
+import { RefreshableButton } from "./RefreshableButton";
 
 export const Explore = () => {
-  const { contract, storage, pkh, connect } = useBeacon();
+  const { contract, storage, pkh, connect, Tezos } = useBeacon();
   const [rewards, setRewards] = useState([]);
   const [tokens, setTokens] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,6 @@ export const Explore = () => {
       // arr = arr.filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
       arr = arr.filter((x) => x.receiver === pkh || x.admin === pkh);
     }
-    console.log(arr);
     setRewards(arr);
     setLoading(false);
   }, [storage, pkh]);
@@ -34,6 +34,7 @@ export const Explore = () => {
     if (rewards.length === 0) {
       return;
     }
+    let newTokens = [];
     for (var i = 0; i < rewards.length; i++) {
       let token = null;
       if (rewards[i].asset["fa2"]) {
@@ -53,9 +54,10 @@ export const Explore = () => {
         };
       }
 
-      setTokens((prev) => [...prev, token]);
+      newTokens.push(token);
     }
-  }, [rewards, pkh]);
+    setTokens(newTokens);
+  }, [rewards]);
 
   useEffect(() => {
     loadRewards();
@@ -68,10 +70,11 @@ export const Explore = () => {
   const handleClaim = useCallback(
     async (id) => {
       if (!contract) return;
-      const claimParams = contract.methods.claim(id);
-      claimParams.send();
+      const claimParams = contract.methodsObject.claim(id);
+      const batchOp = Tezos.wallet.batch().withContractCall(claimParams);
+      await batchOp.send();
     },
-    [contract]
+    [contract, Tezos.wallet]
   );
 
   const handleConnect = () => {
@@ -122,15 +125,23 @@ export const Explore = () => {
                       decimals: tokens[index].decimals,
                     }
                   : { symbol: "Loading", decimals: 6 };
-              const tokenName = token.symbol;
+              const tokenName = token.symbol.substring(0, 7) + "...";
               const fullReward = reward.treasury.div(
-                new BigNumber(10).times(token.decimals)
+                new BigNumber(10).pow(token.decimals)
               );
               const collected = reward.collected.div(
-                new BigNumber(10).times(token.decimals)
+                new BigNumber(10).pow(token.decimals)
               );
 
-              const left = fullReward.minus(collected);
+              const left = reward.treasury
+                .minus(reward.collected)
+                .times(
+                  new Date() - new Date(reward.deadline) < 0
+                    ? new Date() - new Date(reward.last_claimed)
+                    : 1
+                )
+                .times(reward.distr_speed_f)
+                .div(new BigNumber(10).pow(18 + token.decimals + 6));
               return (
                 <tr key={index}>
                   <td>
@@ -154,6 +165,15 @@ export const Explore = () => {
                 </tr>
               );
             })
+          )}
+          {pkh && (
+            <tr>
+              <td></td>
+              <td></td>
+              <td>
+                <RefreshableButton callback={() => loadRewards()} />
+              </td>
+            </tr>
           )}
         </tbody>
       </table>
