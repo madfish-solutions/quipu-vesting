@@ -16,7 +16,7 @@ import { MichelCodecPacker, TezosToolkit } from "@taquito/taquito";
 // };
 
 // MAINNET
-const contractAddress = "KT1N5HyBD5HZ7NZwmDar1LmBN7WkHbdr6zb9";
+export const contractAddress = "KT1N5HyBD5HZ7NZwmDar1LmBN7WkHbdr6zb9";
 
 const DEFAULT_NETWORK = {
   id: "mainnet",
