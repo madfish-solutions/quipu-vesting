@@ -3,9 +3,10 @@ import useBeacon from "../hooks/useBeacon";
 import BigNumber from "bignumber.js";
 import { getTokensMetadata } from "../utils/tokenMetadata.api";
 import { Button } from "./Button";
+import { RefreshableButton } from "./RefreshableButton";
 
 export const Explore = () => {
-  const { contract, storage, pkh, connect } = useBeacon();
+  const { contract, storage, pkh, connect, Tezos } = useBeacon();
   const [rewards, setRewards] = useState([]);
   const [tokens, setTokens] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,8 +23,8 @@ export const Explore = () => {
       arr.push(vesting);
     }
     if (pkh) {
-      // arr = arr.filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
-      arr = arr.filter((x) => x.receiver === pkh || x.admin === pkh);
+      arr = arr.filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
+      // arr = arr.filter((x) => x.receiver === pkh || x.admin === pkh);
     }
     console.log(arr);
     setRewards(arr);
@@ -68,8 +69,9 @@ export const Explore = () => {
   const handleClaim = useCallback(
     async (id) => {
       if (!contract) return;
-      const claimParams = contract.methods.claim(id);
-      claimParams.send();
+      const claimParams = contract.methodsObject.claim(id);
+      const batchOp = Tezos.wallet.batch().withContractCall(claimParams);
+      await batchOp.send();
     },
     [contract]
   );
@@ -122,12 +124,12 @@ export const Explore = () => {
                       decimals: tokens[index].decimals,
                     }
                   : { symbol: "Loading", decimals: 6 };
-              const tokenName = token.symbol;
+              const tokenName = token.symbol.substring(0, 7) + "...";
               const fullReward = reward.treasury.div(
-                new BigNumber(10).times(token.decimals)
+                new BigNumber(10).pow(token.decimals)
               );
               const collected = reward.collected.div(
-                new BigNumber(10).times(token.decimals)
+                new BigNumber(10).pow(token.decimals)
               );
 
               const left = fullReward.minus(collected);
@@ -154,6 +156,15 @@ export const Explore = () => {
                 </tr>
               );
             })
+          )}
+          {pkh && (
+            <tr>
+              <td></td>
+              <td></td>
+              <td>
+                <RefreshableButton callback={() => loadRewards()} />
+              </td>
+            </tr>
           )}
         </tbody>
       </table>

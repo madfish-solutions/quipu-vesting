@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import BigNumber from "bignumber.js";
-import useBeacon from "../hooks/useBeacon";
+import useBeacon, { contractAddress } from "../hooks/useBeacon";
 import { Button } from "./Button";
 
 export const Distribute = () => {
   const [value, setValue] = useState("");
   const [errorJSON, setJSONError] = useState(null);
-  const { contract, storage, pkh } = useBeacon();
+  const { contract, storage, pkh, Tezos } = useBeacon();
 
-  const [{ asset, amount, receiver, deadline }, setFormValue] = useState({
-    asset: "",
-    amount: "",
-    receiver: "",
-    deadline: "",
-  });
+  const [{ asset, assetId, amount, receiver, deadline }, setFormValue] =
+    useState({
+      asset: "",
+      assetId: "",
+      amount: "",
+      receiver: "",
+      deadline: "",
+    });
 
   const handleChange = (e) => {
     handleFormValue(e.target.name, e.target.value);
@@ -34,7 +36,7 @@ export const Distribute = () => {
   };
 
   const handleDistributeForm = () =>
-    makeRpcCall({ asset, amount, receiver, deadline });
+    makeRpcCall({ asset, assetId, amount, receiver, deadline });
 
   const handleDistributeJSON = () => {
     if (errorJSON) {
@@ -43,18 +45,90 @@ export const Distribute = () => {
     makeRpcCall(JSON.parse(value));
   };
 
-  const makeRpcCall = async ({ asset, amount, receiver, deadline }) => {
-    const vestingParams = contract.methods.start_vesting(
-      new BigNumber(amount).multipliedBy(10 ** 8).toFixed(),
-      receiver,
-      deadline,
-      asset || "tez"
-    );
+  const makeRpcCall = async ({
+    asset,
+    assetId,
+    amount,
+    receiver,
+    deadline,
+  }) => {
+    console.log(assetId, assetId === "");
+    const isFa2 = !!assetId || assetId === "0";
+    const isTez = asset === "tz";
+    const assetParam = isFa2
+      ? { fa2: { token: asset, id: Number(assetId) } } //{ token: asset, id: new BigNumber(assetId) } //
+      : isTez
+      ? { tez: null }
+      : { fa12: asset };
+
+    const amountParam = new BigNumber(amount);
+    const deadlineParam = new BigNumber(
+      new Date(deadline).getTime()
+    ).dividedToIntegerBy(1000);
+    // console.log(assetParam)
+    const tx_prm = {
+      asset: assetParam,
+      amount: amountParam,
+      receiver: receiver,
+      deadline: deadlineParam,
+    };
+    console.log(tx_prm);
+    const vestingParams = contract.methodsObject.start_vesting(tx_prm);
+    console.log(vestingParams);
     try {
-      await vestingParams.send();
+      let batchOp;
+      if (isFa2) {
+        const tokenContract = await Tezos.contract.at(asset);
+        const addOperatorParams = tokenContract.methods.update_operators([
+          {
+            add_operator: {
+              owner: pkh,
+              operator: contractAddress,
+              token_id: assetId,
+            },
+          },
+        ]);
+        const removeOperatorParams = tokenContract.methods.update_operators([
+          {
+            remove_operator: {
+              owner: pkh,
+              operator: contractAddress,
+              token_id: assetId,
+            },
+          },
+        ]);
+        batchOp = Tezos.wallet
+          .batch()
+          .withContractCall(addOperatorParams)
+          .withContractCall(vestingParams)
+          .withContractCall(removeOperatorParams)
+          .send();
+      } else if (isTez) {
+        batchOp = Tezos.wallet
+          .batch()
+          .withContractCall(vestingParams)
+          .send({
+            amount: asset === "tez" ? amountParam : 0,
+          });
+      } else {
+        const tokenContract = await Tezos.contract.at(asset);
+        const approveParams = tokenContract.methods.approve(
+          contractAddress,
+          amount
+        );
+        batchOp = Tezos.wallet
+          .batch()
+          .withContractCall(approveParams)
+          .withContractCall(vestingParams)
+          .send();
+      }
+      // console.log(result);
+      await batchOp;
+      console.log("Operation hash:", batchOp.hash);
+      await batchOp.confirmation();
     } catch (e) {
       console.log(e);
-      alert(JSON.stringify(e));
+      // alert(JSON.stringify(e));
     }
   };
   return (
@@ -63,11 +137,20 @@ export const Distribute = () => {
         <h3>Fill form</h3>
         <div className="fill-form">
           <div>
-            <label>Asset</label>
+            <label>Asset Address</label>
             <input
               name="asset"
               value={asset}
-              placeholder={"asset"}
+              placeholder={"tez or FA1.2 Address"}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <label>Asset Id</label>
+            <input
+              name="assetId"
+              value={assetId}
+              placeholder={"for FA2"}
               onChange={handleChange}
             />
           </div>

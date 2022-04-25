@@ -6,6 +6,7 @@ export const Button = ({
   className,
   children,
   disabled = false,
+  style,
 }) => {
   return (
     <button
@@ -14,6 +15,7 @@ export const Button = ({
       className={`button ${variant} ${
         disabled && "button-disabled"
       } ${className}`}
+      style={style}
     >
       {children}
     </button>
