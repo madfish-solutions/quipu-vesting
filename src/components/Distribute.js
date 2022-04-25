@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import BigNumber from "bignumber.js";
 import useBeacon, { contractAddress } from "../hooks/useBeacon";
 import { Button } from "./Button";
@@ -16,9 +16,6 @@ export const Distribute = () => {
       receiver: "",
       deadline: "",
     });
-
-  const [vestingId, setVestingId] = useState("");
-  const [adminAddr, setAdminAddr] = useState("");
 
   const handleChange = (e) => {
     handleFormValue(e.target.name, e.target.value);
@@ -47,26 +44,6 @@ export const Distribute = () => {
     }
     makeRpcCall(JSON.parse(value));
   };
-
-  const handleStopVesting = useCallback(
-    async (id) => {
-      if (!contract) return;
-      const stopVestingParams = contract.methodsObject.stop_vesting(id);
-      const batchOp = Tezos.wallet.batch().withContractCall(stopVestingParams);
-      await batchOp.send();
-    },
-    [contract, Tezos.wallet]
-  );
-
-  const handleSetAdmin = useCallback(
-    async (adminAddress) => {
-      if (!contract) return;
-      const adminParams = contract.methodsObject.set_admin(adminAddress);
-      const batchOp = Tezos.wallet.batch().withContractCall(adminParams);
-      await batchOp.send();
-    },
-    [contract, Tezos.wallet]
-  );
 
   const makeRpcCall = async ({
     asset,
@@ -225,42 +202,6 @@ export const Distribute = () => {
             className="distribute-button"
           >
             Distribute
-          </Button>
-        </div>
-        <h3>Stop vesting by id</h3>
-        <div>
-          <div>
-            <input
-              name="vestingId"
-              value={vestingId}
-              placeholder={"vestingId"}
-              onChange={(e) => setVestingId(e.target.value)}
-            />
-          </div>
-          <Button
-            disabled={storage && pkh !== storage.admin}
-            onClick={handleStopVesting}
-            className="distribute-button"
-          >
-            Stop Vesting
-          </Button>
-        </div>
-        <h3>Change Admin</h3>
-        <div>
-          <div>
-            <input
-              name="adminAddr"
-              value={adminAddr}
-              placeholder={"new admin address"}
-              onChange={(e) => setAdminAddr(e.target.value)}
-            />
-          </div>
-          <Button
-            disabled={storage && pkh !== storage.admin}
-            onClick={handleSetAdmin}
-            className="distribute-button"
-          >
-            Set admin
           </Button>
         </div>
       </div>
