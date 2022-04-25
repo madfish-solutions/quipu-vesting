@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/madfish-vesting/static/css/main.59b27f06.chunk.css",
-    "main.js": "/madfish-vesting/static/js/main.7af164a1.chunk.js",
-    "main.js.map": "/madfish-vesting/static/js/main.7af164a1.chunk.js.map",
+    "main.js": "/madfish-vesting/static/js/main.950ccba3.chunk.js",
+    "main.js.map": "/madfish-vesting/static/js/main.950ccba3.chunk.js.map",
     "runtime-main.js": "/madfish-vesting/static/js/runtime-main.f4c98aaa.js",
     "runtime-main.js.map": "/madfish-vesting/static/js/runtime-main.f4c98aaa.js.map",
-    "static/js/2.b44460ad.chunk.js": "/madfish-vesting/static/js/2.b44460ad.chunk.js",
-    "static/js/2.b44460ad.chunk.js.map": "/madfish-vesting/static/js/2.b44460ad.chunk.js.map",
+    "static/js/2.612e86f6.chunk.js": "/madfish-vesting/static/js/2.612e86f6.chunk.js",
+    "static/js/2.612e86f6.chunk.js.map": "/madfish-vesting/static/js/2.612e86f6.chunk.js.map",
     "static/js/3.0c27a194.chunk.js": "/madfish-vesting/static/js/3.0c27a194.chunk.js",
     "static/js/3.0c27a194.chunk.js.map": "/madfish-vesting/static/js/3.0c27a194.chunk.js.map",
     "index.html": "/madfish-vesting/index.html",
     "static/css/main.59b27f06.chunk.css.map": "/madfish-vesting/static/css/main.59b27f06.chunk.css.map",
-    "static/js/2.b44460ad.chunk.js.LICENSE.txt": "/madfish-vesting/static/js/2.b44460ad.chunk.js.LICENSE.txt"
+    "static/js/2.612e86f6.chunk.js.LICENSE.txt": "/madfish-vesting/static/js/2.612e86f6.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.f4c98aaa.js",
-    "static/js/2.b44460ad.chunk.js",
+    "static/js/2.612e86f6.chunk.js",
     "static/css/main.59b27f06.chunk.css",
-    "static/js/main.7af164a1.chunk.js"
+    "static/js/main.950ccba3.chunk.js"
   ]
 }
