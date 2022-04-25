@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from "react";
-import BigNumber from "bignumber.js";
-import useBeacon, { contractAddress } from "../hooks/useBeacon";
+import useBeacon from "../hooks/useBeacon";
 import { Button } from "./Button";
 
 export const ChangeAdmin = () => {
