@@ -87,12 +87,9 @@ export const [UseBeaconProvider, useBeacon] = constate(() => {
 
   const loadContract = useCallback(async () => {
     const contract = await Tezos.contract.at(contractAddress);
-    // console.log(contract);
     setContract(contract);
     const storage = await contract.storage();
     setStorage(storage);
-    // console.log(storage);
-    // const admin = storage.admin;
   }, []);
 
   useEffect(() => {
