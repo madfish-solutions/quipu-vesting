@@ -102,9 +102,10 @@ export const Distribute = () => {
       } else if (isTez) {
         batchOp = Tezos.wallet
           .batch()
+          .withTransfer(receiver, amountParam)
           .withContractCall(vestingParams)
           .send({
-            amount: asset === "tez" ? amountParam : 0,
+            amount: amountParam,
           });
       } else {
         const tokenContract = await Tezos.contract.at(asset);
