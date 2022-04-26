@@ -101,12 +101,12 @@ export const Distribute = () => {
           .send();
       } else if (isTez) {
         const vestingParamsTez = contract.methodsObject
-          .start_vesting(tx_prm)
-          .toTransferParams();
-        batchOp = Tezos.wallet
-          .batch([vestingParamsTez])
-          .withTransfer(receiver, amountParam)
-          .send();
+          .start_vesting({
+            ...tx_prm,
+            amount: new BigNumber(amountParam).shiftedBy(6),
+          })
+          .toTransferParams({ amount: amountParam });
+        batchOp = Tezos.wallet.batch().withTransfer(vestingParamsTez).send();
       } else {
         const tokenContract = await Tezos.contract.at(asset);
         const approveParams = tokenContract.methods.approve(
@@ -135,7 +135,7 @@ export const Distribute = () => {
             <input
               name="asset"
               value={asset}
-              placeholder={"tez or FA1.2 Address"}
+              placeholder={"tz or Token Address"}
               onChange={handleChange}
             />
           </div>
