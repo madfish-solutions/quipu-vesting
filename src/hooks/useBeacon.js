@@ -46,7 +46,7 @@ class LambdaViewSigner {
 }
 
 const options = {
-  name: "FA2 deployer",
+  name: "Madfish Vesting",
   iconUrl: "https://tezostaquito.io/img/favicon.png",
 };
 

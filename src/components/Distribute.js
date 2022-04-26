@@ -100,13 +100,13 @@ export const Distribute = () => {
           .withContractCall(removeOperatorParams)
           .send();
       } else if (isTez) {
+        const vestingParamsTez = contract.methodsObject
+          .start_vesting(tx_prm)
+          .toTransferParams();
         batchOp = Tezos.wallet
-          .batch()
+          .batch([vestingParamsTez])
           .withTransfer(receiver, amountParam)
-          .withContractCall(vestingParams)
-          .send({
-            amount: amountParam,
-          });
+          .send();
       } else {
         const tokenContract = await Tezos.contract.at(asset);
         const approveParams = tokenContract.methods.approve(
