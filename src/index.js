@@ -4,14 +4,17 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { UseBeaconProvider } from "./hooks/useBeacon";
+import { UseRewardsProvider } from "./hooks/useRewards";
 import { UseTabsProvider } from "./hooks/useTabs";
 
 ReactDOM.render(
   <React.StrictMode>
     <UseBeaconProvider>
-      <UseTabsProvider>
-        <App />
-      </UseTabsProvider>
+      <UseRewardsProvider>
+        <UseTabsProvider>
+          <App />
+        </UseTabsProvider>
+      </UseRewardsProvider>
     </UseBeaconProvider>
   </React.StrictMode>,
   document.getElementById("root")

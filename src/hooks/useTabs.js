@@ -7,9 +7,9 @@ import { Stop } from "../components/Stop";
 
 const TABS = [
   { label: "Explore", component: Explore },
-  { label: "Distribute", component: Distribute },
-  { label: "Stop vesting", component: Stop },
-  { label: "Change Admin", component: ChangeAdmin },
+  { label: "Distribute", component: Distribute, admin: true },
+  { label: "Stop vesting", component: Stop, admin: true },
+  { label: "Change Admin", component: ChangeAdmin, admin: true },
 ];
 
 export const [UseTabsProvider, useTabs] = constate(() => {

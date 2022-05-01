@@ -24,6 +24,7 @@ export const Header = () => {
             onClick={() => setCurrentTab(index)}
             selected={currentTab === index}
             key={index}
+            admin={tab.admin}
           >
             {tab.label}
           </Tab>
