@@ -45,6 +45,15 @@
   bottom: 32px;
 }
 
+.material-tabs-disabled {
+  cursor: not-allowed;
+}
+
+.material-tabs-disabled .material-tabs-content {
+  color: #ccc4ca;
+  cursor: not-allowed;
+}
+
 @media only screen and (max-width: 520px) {
   .nav-tabs.material-tabs > li > a {
     font-size: 11px;

@@ -36,22 +36,36 @@ export const Distribute = () => {
   };
 
   const handleDistributeForm = () =>
-    makeRpcCall({ asset, assetId, amount, receiver, deadline });
+    makeRpcCall([{ asset, assetId, amount, receiver, deadline }]);
 
   const handleDistributeJSON = () => {
     if (errorJSON) {
       return;
     }
-    makeRpcCall(JSON.parse(value));
+    const params = JSON.parse(value);
+    if (Array.isArray(params)) {
+      makeRpcCall(params);
+    } else {
+      makeRpcCall([params]);
+    }
   };
 
-  const makeRpcCall = async ({
-    asset,
-    assetId,
-    amount,
-    receiver,
-    deadline,
-  }) => {
+  const makeRpcCall = async (opParams) => {
+    try {
+      let batchOp = Tezos.wallet.batch();
+      for (var i = 0; i < opParams.length; i++) {
+        batchOp = await makeParams(opParams[i], batchOp);
+      }
+      batchOp.send();
+    } catch (e) {
+      console.log("error in makeRpcCall", e);
+    }
+  };
+
+  const makeParams = async (
+    { asset, assetId, amount, receiver, deadline },
+    batchOp
+  ) => {
     const isFa2 = !!assetId || assetId === "0";
     const isTez = asset === "tz";
     const assetParam = isFa2
@@ -72,7 +86,6 @@ export const Distribute = () => {
     };
     const vestingParams = contract.methodsObject.start_vesting(tx_prm);
     try {
-      let batchOp;
       if (isFa2) {
         const tokenContract = await Tezos.contract.at(asset);
         const addOperatorParams = tokenContract.methods.update_operators([
@@ -93,12 +106,10 @@ export const Distribute = () => {
             },
           },
         ]);
-        batchOp = Tezos.wallet
-          .batch()
+        batchOp = batchOp
           .withContractCall(addOperatorParams)
           .withContractCall(vestingParams)
-          .withContractCall(removeOperatorParams)
-          .send();
+          .withContractCall(removeOperatorParams);
       } else if (isTez) {
         const vestingParamsTez = contract.methodsObject
           .start_vesting({
@@ -106,21 +117,18 @@ export const Distribute = () => {
             amount: new BigNumber(amountParam).shiftedBy(6),
           })
           .toTransferParams({ amount: amountParam });
-        batchOp = Tezos.wallet.batch().withTransfer(vestingParamsTez).send();
+        batchOp = batchOp.withTransfer(vestingParamsTez);
       } else {
         const tokenContract = await Tezos.contract.at(asset);
         const approveParams = tokenContract.methods.approve(
           contractAddress,
           amount
         );
-        batchOp = Tezos.wallet
-          .batch()
+        batchOp = batchOp
           .withContractCall(approveParams)
-          .withContractCall(vestingParams)
-          .send();
+          .withContractCall(vestingParams);
       }
-      await batchOp;
-      await batchOp.confirmation();
+      return batchOp;
     } catch (e) {
       console.log(e);
     }
@@ -196,6 +204,17 @@ export const Distribute = () => {
           {errorJSON && typeof errorJSON === "string" && (
             <div className="textarea-error">{errorJSON}</div>
           )}
+
+          <label>Example:</label>
+          <pre>{`
+[{
+  "amount": "1234",
+  "asset": "KT19H9YbHqsxFTayap7aTEfbcnyPeALKYgt9",
+  "assetId": "0",
+  "deadline": "2022-05-26",
+  "receiver": "tz1VvDQcafAxpAcc2hFWDpSmRYqdEmEhrW1h"
+}]
+    `}</pre>
 
           <Button
             disabled={storage && pkh !== storage.admin}

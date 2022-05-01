@@ -4,31 +4,12 @@ import BigNumber from "bignumber.js";
 import { getTokensMetadata } from "../utils/tokenMetadata.api";
 import { Button } from "./Button";
 import { RefreshableButton } from "./RefreshableButton";
+import { useRewards } from "../hooks/useRewards";
 
 export const Explore = () => {
-  const { contract, storage, pkh, connect, Tezos } = useBeacon();
-  const [rewards, setRewards] = useState([]);
+  const { contract, pkh, connect, Tezos } = useBeacon();
   const [tokens, setTokens] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const loadRewards = useCallback(async () => {
-    if (!storage || !storage.vestings_counter || !pkh) {
-      setLoading(false);
-      return;
-    }
-    const limit = storage.vestings_counter;
-    let arr = [];
-    for (let i = 0; i < limit; i++) {
-      const vesting = await storage.vestings.get([i]);
-      arr.push(vesting);
-    }
-    if (pkh) {
-      // arr = arr.filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
-      arr = arr.filter((x) => x.receiver === pkh || x.admin === pkh);
-    }
-    setRewards(arr);
-    setLoading(false);
-  }, [storage, pkh]);
+  const { rewards, loadingRewards: loading, loadRewards } = useRewards();
 
   const loadTokensMetadata = useCallback(async () => {
     if (rewards.length === 0) {
@@ -58,10 +39,6 @@ export const Explore = () => {
     }
     setTokens(newTokens);
   }, [rewards]);
-
-  useEffect(() => {
-    loadRewards();
-  }, [loadRewards]);
 
   useEffect(() => {
     loadTokensMetadata();
