@@ -56,7 +56,6 @@ export const Distribute = () => {
       for (var i = 0; i < opParams.length; i++) {
         batchOp = await makeParams(opParams[i], batchOp);
       }
-      console.log(opParams);
       batchOp.send();
     } catch (e) {
       console.log("error in makeRpcCall", e);
