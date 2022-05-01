@@ -5,26 +5,26 @@ import { BeaconWallet } from "@taquito/beacon-wallet";
 import { MichelCodecPacker, TezosToolkit } from "@taquito/taquito";
 
 // TESTNET
-export const contractAddress = "KT1QwVmmYNp3Ke2JkNr2eaAdYyAJFusbi7yH";
-
-const DEFAULT_NETWORK = {
-  id: "ithacanet",
-  nextNetworkIndex: 1,
-  name: "Ithacanet",
-  type: "testnet",
-  rpcBaseURL: "https://ithacanet.smartpy.io",
-};
-
-// MAINNET
-// export const contractAddress = "KT1N5HyBD5HZ7NZwmDar1LmBN7WkHbdr6zb9";
+// export const contractAddress = "KT1QwVmmYNp3Ke2JkNr2eaAdYyAJFusbi7yH";
 
 // const DEFAULT_NETWORK = {
-//   id: "mainnet",
+//   id: "ithacanet",
 //   nextNetworkIndex: 1,
-//   name: "Mainnet",
-//   type: "main",
-//   rpcBaseURL: "https://mainnet.smartpy.io",
+//   name: "Ithacanet",
+//   type: "testnet",
+//   rpcBaseURL: "https://ithacanet.smartpy.io",
 // };
+
+// MAINNET
+export const contractAddress = "KT1N5HyBD5HZ7NZwmDar1LmBN7WkHbdr6zb9";
+
+const DEFAULT_NETWORK = {
+  id: "mainnet",
+  nextNetworkIndex: 1,
+  name: "Mainnet",
+  type: "main",
+  rpcBaseURL: "https://mainnet.smartpy.io",
+};
 
 class LambdaViewSigner {
   async publicKeyHash() {
