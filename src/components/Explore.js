@@ -57,6 +57,7 @@ export const Explore = () => {
   const handleConnect = () => {
     connect().catch(console.log);
   };
+  console.log(rewards);
   return (
     <section>
       <div className="search-bar"></div>
@@ -134,7 +135,7 @@ export const Explore = () => {
                   <td>
                     <Button
                       disabled={!pkh || left.toFixed(0) === "0"}
-                      onClick={() => handleClaim(index)}
+                      onClick={() => handleClaim(reward.id)}
                     >
                       Claim
                     </Button>

@@ -11,6 +11,7 @@ export const [UseRewardsProvider, useRewards] = constate(() => {
   const loadRewards = useCallback(async () => {
     if (!storage || !storage.vestings_counter || !pkh) {
       setLoading(false);
+      if (!pkh) setRewards([]);
       return;
     }
     const limit = storage.vestings_counter;
@@ -20,8 +21,10 @@ export const [UseRewardsProvider, useRewards] = constate(() => {
       arr.push(vesting);
     }
     if (pkh) {
-      // arr = arr.filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
-      arr = arr.filter((x) => x.receiver === pkh || x.admin === pkh);
+      arr = arr
+        .map((_, index) => ({ ..._, id: index }))
+        // .filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
+        .filter((x) => x.receiver === pkh || x.admin === pkh);
     }
     setRewards(arr);
     setLoading(false);
