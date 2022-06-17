@@ -1,20 +1,20 @@
 import React, { useCallback, useEffect, useState } from "react";
 import useBeacon from "../hooks/useBeacon";
-import BigNumber from "bignumber.js";
 import { getTokensMetadata } from "../utils/tokenMetadata.api";
-import { Button } from "./Button";
 import { RefreshableButton } from "./RefreshableButton";
 import { useRewards } from "../hooks/useRewards";
+import { Table } from './Table';
 
 export const Explore = () => {
-  const { contract, pkh, connect, Tezos } = useBeacon();
+  const { pkh } = useBeacon();
   const [tokens, setTokens] = useState([]);
-  const { rewards, loadingRewards: loading, loadRewards } = useRewards();
+  const { rewards, loadRewards } = useRewards();
 
   const loadTokensMetadata = useCallback(async () => {
     if (rewards.length === 0) {
       return;
     }
+    console.log('loadTokensMetadata');
     let newTokens = [];
     for (var i = 0; i < rewards.length; i++) {
       let token = null;
@@ -44,117 +44,17 @@ export const Explore = () => {
     loadTokensMetadata();
   }, [loadTokensMetadata]);
 
-  const handleClaim = useCallback(
-    async (id) => {
-      if (!contract) return;
-      const claimParams = contract.methodsObject.claim(id);
-      const batchOp = Tezos.wallet.batch().withContractCall(claimParams);
-      await batchOp.send();
-    },
-    [contract, Tezos.wallet]
-  );
-
-  const handleConnect = () => {
-    connect().catch(console.log);
-  };
-  console.log(rewards);
   return (
     <section>
       <div className="search-bar"></div>
-      <table>
-        <thead>
-          <tr>
-            <th>Full Reward</th>
-            <th>Claimed</th>
-            <th>Pending</th>
-            <th>Ends in</th>
-            <th>{/* action button */}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rewards.length === 0 ? (
-            loading ? (
-              <tr>
-                <td></td>
-                <td></td>
-                <td>Loading</td>
-              </tr>
-            ) : !pkh ? (
-              <tr>
-                <td></td>
-                <td></td>
-                <td>
-                  <Button onClick={handleConnect}>Connect to continue</Button>
-                </td>
-              </tr>
-            ) : (
-              <tr>
-                <td></td>
-                <td></td>
-                <td>Not found</td>
-              </tr>
-            )
-          ) : (
-            rewards.map((reward, index) => {
-              const token =
-                tokens.length > 0
-                  ? {
-                      symbol: tokens[index].symbol,
-                      decimals: tokens[index].decimals,
-                    }
-                  : { symbol: "Loading", decimals: 6 };
-              const tokenName = token.symbol.substring(0, 7) + "...";
-              const fullReward = reward.treasury.div(
-                new BigNumber(10).pow(token.decimals)
-              );
-              const collected = reward.collected.div(
-                new BigNumber(10).pow(token.decimals)
-              );
 
-              const left = reward.treasury
-                .minus(reward.collected)
-                .times(
-                  new Date() - new Date(reward.deadline) < 0
-                    ? new Date() - new Date(reward.last_claimed)
-                    : 1
-                )
-                .times(reward.distr_speed_f)
-                .div(new BigNumber(10).pow(18 + token.decimals + 6));
-              return (
-                <tr key={index}>
-                  <td>
-                    {fullReward.toFixed(0)} {tokenName}
-                  </td>
-                  <td>
-                    {collected.toFixed(0)} {tokenName}
-                  </td>
-                  <td>
-                    {left.toFixed(0)} {tokenName}
-                  </td>
-                  <td>{new Date(reward.deadline).toDateString()}</td>
-                  <td>
-                    <Button
-                      disabled={!pkh || left.toFixed(0) === "0"}
-                      onClick={() => handleClaim(reward.id)}
-                    >
-                      Claim
-                    </Button>
-                  </td>
-                </tr>
-              );
-            })
-          )}
-          {pkh && (
-            <tr>
-              <td></td>
-              <td></td>
-              <td>
-                <RefreshableButton callback={() => loadRewards()} />
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <h3 className='pad'>Your rewards:</h3>
+      <Table tokens={tokens} rewards={rewards.filter(x => x.receiver === pkh || x.admin === pkh)} />
+      <h3 className='pad'>All rewards:</h3>
+      <Table tokens={tokens} rewards={rewards.filter(x => x.receiver !== pkh)} />
+      {pkh && (
+        <RefreshableButton callback={() => loadRewards()} />
+      )}
     </section>
   );
 };

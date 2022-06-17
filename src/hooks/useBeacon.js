@@ -16,7 +16,7 @@ import { MichelCodecPacker, TezosToolkit } from "@taquito/taquito";
 // };
 
 // MAINNET
-export const contractAddress = "KT1N5HyBD5HZ7NZwmDar1LmBN7WkHbdr6zb9";
+export const contractAddress = process.env.VESTING_CONTRACT || "KT1N5HyBD5HZ7NZwmDar1LmBN7WkHbdr6zb9";
 
 const DEFAULT_NETWORK = {
   id: "mainnet",
@@ -59,7 +59,7 @@ Tezos.setSignerProvider(new LambdaViewSigner());
 Tezos.setPackerProvider(michelEncoder);
 
 export const [UseBeaconProvider, useBeacon] = constate(() => {
-  const [pkh, setUserPkh] = useState();
+  const [pkh, setUserPkh] = useState('');
   const [contract, setContract] = useState(null);
   const [storage, setStorage] = useState(null);
 

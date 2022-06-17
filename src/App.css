@@ -40,6 +40,12 @@ main section table {
   width: 100%;
 }
 
+main section .pad {
+  padding-left: 20px;
+  padding-top: 10px;
+  width: 100%;
+}
+
 .section-content {
   padding: 40px 20px;
   display: flex;

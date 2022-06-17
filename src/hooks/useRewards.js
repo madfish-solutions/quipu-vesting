@@ -4,14 +4,15 @@ import constate from "constate";
 import useBeacon from "./useBeacon";
 
 export const [UseRewardsProvider, useRewards] = constate(() => {
-  const { storage, pkh } = useBeacon();
+  const { storage } = useBeacon();
   const [rewards, setRewards] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const loadRewards = useCallback(async () => {
-    if (!storage || !storage.vestings_counter || !pkh) {
-      setLoading(false);
-      if (!pkh) setRewards([]);
+    // if (!storage || !storage.vestings_counter || !pkh) {
+    if (!storage || !storage.vestings_counter) {
+      setLoading(true);
+      // if (!pkh) setRewards([]);
       return;
     }
     const limit = storage.vestings_counter;
@@ -20,15 +21,17 @@ export const [UseRewardsProvider, useRewards] = constate(() => {
       const vesting = await storage.vestings.get([i]);
       arr.push(vesting);
     }
-    if (pkh) {
-      arr = arr
-        .map((_, index) => ({ ..._, id: index }))
-        // .filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
-        .filter((x) => x.receiver === pkh || x.admin === pkh);
-    }
+    arr = arr
+      .map((_, index) => ({ ..._, id: index }))
+    // if (pkh) {
+    //   // arr = arr
+    //   // .map((_, index) => ({ ..._, id: index }))
+    //   // .filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
+    //   // .filter((x) => x.receiver === pkh || x.admin === pkh);
+    // }
     setRewards(arr);
     setLoading(false);
-  }, [storage, pkh]);
+  }, [storage]);
 
   useEffect(() => {
     loadRewards();
