@@ -2,7 +2,7 @@
   "name": "madfish-vesting",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://github.com/madfish-solutions/quipu-vesting",
+  "homepage": "https://madfish-solutions.github.io/quipu-vesting",
   "dependencies": {
     "@airgap/beacon-sdk": "^2.3.10",
     "@taquito/beacon-wallet": "^10.1.3",
