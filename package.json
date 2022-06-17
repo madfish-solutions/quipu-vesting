@@ -29,7 +29,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -r https://github.com/madfish-solutions/quipu-vesting"
+    "deploy": "gh-pages -b quipu-master -d build -r https://github.com/madfish-solutions/quipu-vesting"
   },
   "eslintConfig": {
     "extends": [
