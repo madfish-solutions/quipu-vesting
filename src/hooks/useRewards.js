@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from "react";
 import constate from "constate";
 
-import useBeacon from "./useBeacon";
+import useBeacon, { loadFromTzktBigmap } from "./useBeacon";
 
 export const [UseRewardsProvider, useRewards] = constate(() => {
   const { storage } = useBeacon();
@@ -16,19 +16,22 @@ export const [UseRewardsProvider, useRewards] = constate(() => {
       return;
     }
     const limit = storage.vestings_counter;
-    let arr = [];
-    for (let i = 0; i < limit; i++) {
-      const vesting = await storage.vestings.get([i]);
-      arr.push(vesting);
-    }
-    arr = arr
-      .map((_, index) => ({ ..._, id: index }))
-    // if (pkh) {
-    //   // arr = arr
-    //   // .map((_, index) => ({ ..._, id: index }))
-    //   // .filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
-    //   // .filter((x) => x.receiver === pkh || x.admin === pkh);
+    const newRewards = await loadFromTzktBigmap(storage.vestings.id.toNumber(), limit);
+    const arr = newRewards.map((_, index) => ({ ..._.value, id: index }))
+    console.log(arr)
+    // let arr = [];
+    // for (let i = 0; i < limit; i++) {
+    //   const vesting = await storage.vestings.get([i]);
+    //   arr.push(vesting);
     // }
+    // arr = arr
+    //   .map((_, index) => ({ ..._, id: index }))
+    // // if (pkh) {
+    // //   // arr = arr
+    // //   // .map((_, index) => ({ ..._, id: index }))
+    // //   // .filter((x) => x.receiver === pkh || x.admin !== pkh); // for debug
+    // //   // .filter((x) => x.receiver === pkh || x.admin === pkh);
+    // // }
     setRewards(arr);
     setLoading(false);
   }, [storage]);

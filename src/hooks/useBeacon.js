@@ -17,6 +17,7 @@ import { MichelCodecPacker, TezosToolkit } from "@taquito/taquito";
 
 // MAINNET
 export const contractAddress = process.env.REACT_APP_VESTING_CONTRACT || "KT1N5HyBD5HZ7NZwmDar1LmBN7WkHbdr6zb9";
+export const bigmapId = process.env.REACT_APP_VESTING_BIGMAP_ID || '141266';
 
 const DEFAULT_NETWORK = {
   id: "mainnet",
@@ -57,6 +58,10 @@ const wallet = new BeaconWallet(options, { forcePermission: true });
 Tezos.setWalletProvider(wallet);
 Tezos.setSignerProvider(new LambdaViewSigner());
 Tezos.setPackerProvider(michelEncoder);
+
+export const loadFromTzktBigmap = async (id, limit) => {
+  return await fetch(`https://api.tzkt.io/v1/bigmaps/${id}/keys?limit=${limit}`).then(e => e.json())
+}
 
 export const [UseBeaconProvider, useBeacon] = constate(() => {
   const [vestingContract, setVesting] = useState(contractAddress);

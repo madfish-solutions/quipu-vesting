@@ -26,20 +26,23 @@ export const TokenRow = ({ tokens, index, reward }) => {
       : { symbol: "Loading", decimals: 6 };
   const tokenName = token.symbol.substring(0, 7) + "...";
   const tenInDecimals = new BigNumber(10).pow(token.decimals)
-  const fullReward = reward.treasury.div(
+  const treasury = new BigNumber(reward.treasury)
+  const speed = new BigNumber(reward.distr_speed_f)
+  const rewardAmount = new BigNumber(reward.collected)
+  const fullReward = treasury.div(
     tenInDecimals
   );
-  const collected = reward.collected.div(
+  const collected = rewardAmount.div(
     tenInDecimals
   );
 
-  const dt = reward.treasury.times(tenIn18.times(1000)).div(reward.distr_speed_f)
+  const dt = treasury.times(tenIn18.times(1000)).div(speed)
 
   const t0 = new Date(reward.deadline).getTime() - dt.toNumber();
 
   const dtDays = Math.floor(dt / (1000 * 60 * 60 * 24));
 
-  const left = Date.now() < new Date(reward.deadline).getTime() ? reward.treasury.times((Date.now() - t0) / dt).minus(reward.collected).div(tenInDecimals) : new BigNumber(-1)
+  const left = Date.now() < new Date(reward.deadline).getTime() ? treasury.times((Date.now() - t0) / dt).minus(rewardAmount).div(tenInDecimals) : new BigNumber(-1)
   const leftLabel = left.lt(0) ? 'All collected' : left.gt(fullReward.minus(collected)) ? `${fullReward.minus(collected).toFixed(0)} ${tokenName}` : `${left.toFixed(0)} ${tokenName}`
   return (
     <tr>
