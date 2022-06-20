@@ -16,7 +16,7 @@ import { MichelCodecPacker, TezosToolkit } from "@taquito/taquito";
 // };
 
 // MAINNET
-export const contractAddress = process.env.REACT_APP_VESTING_CONTRACT || "KT1XCayigssNGqGUuFs7oBiRobTksyJuHhnT";
+export const contractAddress = "KT1XCayigssNGqGUuFs7oBiRobTksyJuHhnT";
 
 const DEFAULT_NETWORK = {
   id: "mainnet",
