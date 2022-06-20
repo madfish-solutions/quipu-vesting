@@ -22,9 +22,20 @@
 
 main {
   background-color: white;
+  flex-direction: column;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.exploreVesting {
+  display: flex;
+}
+
+.vestingCol {
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
 }
 
 main section {

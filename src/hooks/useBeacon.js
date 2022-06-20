@@ -17,6 +17,8 @@ import { MichelCodecPacker, TezosToolkit } from "@taquito/taquito";
 
 // MAINNET
 export const contractAddress = "KT1XCayigssNGqGUuFs7oBiRobTksyJuHhnT";
+// export const contractAddress = process.env.REACT_APP_VESTING_CONTRACT || "KT1N5HyBD5HZ7NZwmDar1LmBN7WkHbdr6zb9";
+export const bigmapId = process.env.REACT_APP_VESTING_BIGMAP_ID || '141266';
 
 const DEFAULT_NETWORK = {
   id: "mainnet",
@@ -58,7 +60,12 @@ Tezos.setWalletProvider(wallet);
 Tezos.setSignerProvider(new LambdaViewSigner());
 Tezos.setPackerProvider(michelEncoder);
 
+export const loadFromTzktBigmap = async (id, limit) => {
+  return await fetch(`https://api.tzkt.io/v1/bigmaps/${id}/keys?limit=${limit}`).then(e => e.json())
+}
+
 export const [UseBeaconProvider, useBeacon] = constate(() => {
+  const [vestingContract, setVesting] = useState(contractAddress);
   const [pkh, setUserPkh] = useState('');
   const [contract, setContract] = useState(null);
   const [storage, setStorage] = useState(null);
@@ -82,24 +89,32 @@ export const [UseBeaconProvider, useBeacon] = constate(() => {
     await wallet.disconnect();
     await wallet.clearActiveAccount();
     Tezos.setWalletProvider(wallet);
-    setUserPkh(undefined);
+    setUserPkh('');
   }, []);
 
   const loadContract = useCallback(async () => {
-    const contract = await Tezos.contract.at(contractAddress);
+    const contract = await Tezos.contract.at(vestingContract);
     setContract(contract);
     const storage = await contract.storage();
     setStorage(storage);
-  }, []);
+  }, [vestingContract]);
 
   useEffect(() => {
     loadContract();
   }, [loadContract]);
 
+  const handleSetVesting = (address) => {
+    setStorage(null);
+    setContract(null);
+    setVesting(address);
+  }
+
   return {
     connect,
     disconnect,
     isConnected: !!pkh,
+    setVesting: handleSetVesting,
+    vestingContract,
     Tezos,
     wallet,
     pkh,
