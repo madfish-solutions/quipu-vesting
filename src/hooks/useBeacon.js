@@ -82,7 +82,7 @@ export const [UseBeaconProvider, useBeacon] = constate(() => {
     await wallet.disconnect();
     await wallet.clearActiveAccount();
     Tezos.setWalletProvider(wallet);
-    setUserPkh(undefined);
+    setUserPkh('');
   }, []);
 
   const loadContract = useCallback(async () => {
