@@ -59,6 +59,7 @@ Tezos.setSignerProvider(new LambdaViewSigner());
 Tezos.setPackerProvider(michelEncoder);
 
 export const [UseBeaconProvider, useBeacon] = constate(() => {
+  const [vestingContract, setVesting] = useState(contractAddress);
   const [pkh, setUserPkh] = useState('');
   const [contract, setContract] = useState(null);
   const [storage, setStorage] = useState(null);
@@ -86,20 +87,28 @@ export const [UseBeaconProvider, useBeacon] = constate(() => {
   }, []);
 
   const loadContract = useCallback(async () => {
-    const contract = await Tezos.contract.at(contractAddress);
+    const contract = await Tezos.contract.at(vestingContract);
     setContract(contract);
     const storage = await contract.storage();
     setStorage(storage);
-  }, []);
+  }, [vestingContract]);
 
   useEffect(() => {
     loadContract();
   }, [loadContract]);
 
+  const handleSetVesting = (address) => {
+    setStorage(null);
+    setContract(null);
+    setVesting(address);
+  }
+
   return {
     connect,
     disconnect,
     isConnected: !!pkh,
+    setVesting: handleSetVesting,
+    vestingContract,
     Tezos,
     wallet,
     pkh,
