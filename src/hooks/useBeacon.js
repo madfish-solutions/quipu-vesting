@@ -23,7 +23,7 @@ const DEFAULT_NETWORK = {
   nextNetworkIndex: 1,
   name: "Mainnet",
   type: "main",
-  rpcBaseURL: "https://mainnet.smartpy.io",
+  rpcBaseURL: "https://mainnet-tezos.giganode.io",
 };
 
 class LambdaViewSigner {
