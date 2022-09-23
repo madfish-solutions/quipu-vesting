@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/quipu-vesting/static/css/main.780f5f94.chunk.css",
-    "main.js": "/quipu-vesting/static/js/main.56c73fd4.chunk.js",
-    "main.js.map": "/quipu-vesting/static/js/main.56c73fd4.chunk.js.map",
+    "main.js": "/quipu-vesting/static/js/main.4fc641cc.chunk.js",
+    "main.js.map": "/quipu-vesting/static/js/main.4fc641cc.chunk.js.map",
     "runtime-main.js": "/quipu-vesting/static/js/runtime-main.172b92f9.js",
     "runtime-main.js.map": "/quipu-vesting/static/js/runtime-main.172b92f9.js.map",
-    "static/js/2.efd724c5.chunk.js": "/quipu-vesting/static/js/2.efd724c5.chunk.js",
-    "static/js/2.efd724c5.chunk.js.map": "/quipu-vesting/static/js/2.efd724c5.chunk.js.map",
+    "static/js/2.83d9509b.chunk.js": "/quipu-vesting/static/js/2.83d9509b.chunk.js",
+    "static/js/2.83d9509b.chunk.js.map": "/quipu-vesting/static/js/2.83d9509b.chunk.js.map",
     "static/js/3.0c27a194.chunk.js": "/quipu-vesting/static/js/3.0c27a194.chunk.js",
     "static/js/3.0c27a194.chunk.js.map": "/quipu-vesting/static/js/3.0c27a194.chunk.js.map",
     "index.html": "/quipu-vesting/index.html",
     "static/css/main.780f5f94.chunk.css.map": "/quipu-vesting/static/css/main.780f5f94.chunk.css.map",
-    "static/js/2.efd724c5.chunk.js.LICENSE.txt": "/quipu-vesting/static/js/2.efd724c5.chunk.js.LICENSE.txt"
+    "static/js/2.83d9509b.chunk.js.LICENSE.txt": "/quipu-vesting/static/js/2.83d9509b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.172b92f9.js",
-    "static/js/2.efd724c5.chunk.js",
+    "static/js/2.83d9509b.chunk.js",
     "static/css/main.780f5f94.chunk.css",
-    "static/js/main.56c73fd4.chunk.js"
+    "static/js/main.4fc641cc.chunk.js"
   ]
 }
